@@ -1,7 +1,9 @@
 from selenium import webdriver
+import time
+from django.test import LiveServerTestCase
 import unittest
 from selenium.webdriver.common.keys import Keys
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         self.browser=webdriver.Firefox()
         self.browser.implicitly_wait(1)
@@ -9,9 +11,10 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.quit()
 
     def check_for_row_in_list_table(self,row_text):
-        self.browser.implicitly_wait(2)
-        table=self.browser.find_element_by_id("id_list_table")
-        rows=table.find_elements_by_tag_name("tr")
+        self.browser.delete_all_cookies()
+        time.sleep(2)
+        table = self.browser.find_element_by_id("id_list_table")
+        rows = table.find_elements_by_tag_name("tr")
         self.assertIn(row_text,[row.text for row in rows])
 
 
@@ -19,7 +22,7 @@ class NewVisitorTest(unittest.TestCase):
 
         #伊迪丝听说有一个很酷的在线代办事项应用
         #她去看了看这个应用的首页
-        self.browser.get("http://localhost:8000")
+        self.browser.get(self.live_server_url)
 
         #她注意到网页的标题和头部都包含了To-Do这个词
         self.assertIn("To-Do",self.browser.title)
@@ -63,7 +66,7 @@ class NewVisitorTest(unittest.TestCase):
         #他很满意，睡觉去啦
 
 
-if __name__ =='__main__':
-    unittest.main()
+#if __name__ =='__main__':
+#   unittest.main()
 
 
