@@ -1,21 +1,29 @@
 from selenium import webdriver
 import time
 from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import  StaticLiveServerTestCase
 import unittest
 from selenium.webdriver.common.keys import Keys
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         self.browser=webdriver.Firefox()
         self.browser.implicitly_wait(1)
     def tearDown(self):
         self.browser.quit()
 
+    def test_layout_and_styling(self):
+        # 伊迪丝访问首页
+        self.browser.get(self.live_server_url)
+        #self.browser.set_window_size(1024, 768)
+
+        # 她看到输入框完美的居中显示
+        inputbox = self.browser.find_element_by_id("id_new_item")
+        #self.assertAlmostEqual(inputbox.location['x'] + inputbox.size["width"] / 2, 512, delta=5)
 
     def check_for_row_in_list_table(self,row_text):
         table = self.browser.find_element_by_id("id_list_table")
         rows = table.find_elements_by_tag_name("tr")
         self.assertIn(row_text,[row.text for row in rows])
-
 
     def test_can_start_a_list_and_retrieve_it_later(self):
 
